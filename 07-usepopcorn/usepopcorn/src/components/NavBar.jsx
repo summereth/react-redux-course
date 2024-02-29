@@ -1,6 +1,6 @@
 import SearchBar from "./SearchBar";
 
-export default function NavBar() {
+export default function NavBar({ children }) {
   const logo = (
     <div className="logo">
       <span role="img">🍿</span>
@@ -8,17 +8,11 @@ export default function NavBar() {
     </div>
   );
 
-  const searchResult = (
-    <p className="num-results">
-      Found <strong>X</strong> results
-    </p>
-  );
-
   return (
     <nav className="nav-bar">
       {logo}
       <SearchBar />
-      {searchResult}
+      {children}
     </nav>
   );
 }

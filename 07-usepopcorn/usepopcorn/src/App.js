@@ -1,24 +1,30 @@
+import { useState } from "react";
+import { tempMovieData, tempWatchedData } from "./data";
+import ExpandableBox from "./components/ExpandableBox";
 import NavBar from "./components/NavBar";
-import SearchResultBox from "./components/SearchResultBox";
-import WatchedMovieBox from "./components/WatchedMovieBox";
-
-export const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+import NavSearchResult from "./components/NavSearchResult";
+import SearchMovieItems from "./components/SearchMovieItems";
+import WatchedMovieItems from "./components/WatchedMovieItems";
+import WatchedMovieSummary from "./components/WatchedMovieSummary";
 
 export default function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+  const [watched, setWatched] = useState(tempWatchedData);
+
   return (
     <>
-      <NavBar />
-      <Main />
+      <NavBar>
+        <NavSearchResult resultNum={movies.length} />
+      </NavBar>
+      <main className="main">
+        <ExpandableBox>
+          <SearchMovieItems movies={movies} />
+        </ExpandableBox>
+        <ExpandableBox>
+          <WatchedMovieSummary watched={watched} />
+          <WatchedMovieItems movies={watched} />
+        </ExpandableBox>
+      </main>
     </>
-  );
-}
-
-function Main() {
-  return (
-    <main className="main">
-      <SearchResultBox />
-      <WatchedMovieBox />
-    </main>
   );
 }
