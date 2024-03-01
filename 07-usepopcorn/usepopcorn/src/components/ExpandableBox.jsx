@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-const ExpandableBox = ({ children, movies }) => {
+const ExpandableBox = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
