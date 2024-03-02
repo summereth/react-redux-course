@@ -36,6 +36,7 @@ export default function App() {
         onAddFriend={addFriendHandler}
       />
       <SplitBillForm
+        key={selectedFriendId}
         friend={friends.find((friend) => friend.id === selectedFriendId)}
         onUpdateFriendBalance={updateBalanceHandler}
       />
