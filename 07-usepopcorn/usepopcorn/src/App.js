@@ -27,6 +27,20 @@ export default function App() {
     setSelectedId(null);
   }
 
+  function addWatchedHandler(movie) {
+    setWatched((curr) =>
+      curr.find((element) => element.imdbID === movie.imdbID)
+        ? curr.map((element) =>
+            element.imdbID === movie.imdbID ? movie : element
+          )
+        : [...curr, movie]
+    );
+  }
+
+  function removeWatchedHandler(id) {
+    setWatched((curr) => curr.filter((movie) => movie.imdbID !== id));
+  }
+
   useEffect(() => {
     setError("");
     if (query.length < 3) {
@@ -82,11 +96,22 @@ export default function App() {
         </ExpandableBox>
         <ExpandableBox>
           {selectedId ? (
-            <MovieDetails movieId={selectedId} onClose={closeMovieHandler} />
+            <MovieDetails
+              movieId={selectedId}
+              onClose={closeMovieHandler}
+              onAddWatched={addWatchedHandler}
+              ratingByUser={
+                watched.find((element) => element.imdbID === selectedId)
+                  ?.userRating
+              }
+            />
           ) : (
             <>
               <WatchedMovieSummary watched={watched} />
-              <WatchedMovieItems movies={watched} />
+              <WatchedMovieItems
+                movies={watched}
+                onRemove={removeWatchedHandler}
+              />
             </>
           )}
         </ExpandableBox>

@@ -4,14 +4,14 @@ import ErrorMessage from "./ErrorMessage";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
 
-const MovieDetails = ({ movieId, onClose }) => {
+const MovieDetails = ({ movieId, onClose, onAddWatched, ratingByUser }) => {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [userRating, setUserRating] = useState(ratingByUser);
 
   const {
     Title: title,
-    Year: year,
     Released: released,
     Runtime: runtime,
     Genre: genre,
@@ -21,6 +21,18 @@ const MovieDetails = ({ movieId, onClose }) => {
     Poster: poster,
     imdbRating,
   } = movie;
+
+  const addWatchedHandler = () => {
+    onAddWatched({
+      imdbID: movieId,
+      poster,
+      title,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ").at(0)),
+      userRating,
+    });
+    onClose();
+  };
 
   useEffect(() => {
     setError("");
@@ -68,14 +80,26 @@ const MovieDetails = ({ movieId, onClose }) => {
             <img src={poster} alt={`Poster of ${title}`} />
             <div className="details-overview">
               <h2>{title}</h2>
-              <p>{`${released} * ${runtime}`}</p>
+              <p>
+                {released} &bull; {runtime}
+              </p>
               <p>{genre}</p>
               <p>{`⭐️ ${imdbRating} iMDb Rating`}</p>
             </div>
           </header>
           <section>
             <div className="rating">
-              <StarRating maxRating={10} size={24} />
+              <StarRating
+                maxRating={10}
+                size={24}
+                onSetRating={setUserRating}
+                defaultRating={userRating}
+              />
+              {userRating && (
+                <button className="btn-add" onClick={addWatchedHandler}>
+                  + Add to list
+                </button>
+              )}
             </div>
             <p>{plot}</p>
             <p>Starring {actors}</p>

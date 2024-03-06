@@ -1,5 +1,14 @@
-const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+const average = (arr) => {
+  const filteredArr = arr.filter((element) => !isNaN(element));
+  return (
+    Math.round(
+      filteredArr.reduce(
+        (acc, cur, i, filteredArr) => acc + cur / filteredArr.length,
+        0
+      ) * 100
+    ) / 100
+  );
+};
 
 export default function WatchedMovieSummary({ watched }) {
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
