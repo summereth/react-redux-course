@@ -2,11 +2,25 @@ import React from "react";
 import { useState, useEffect } from "react";
 import ErrorMessage from "./ErrorMessage";
 import Loader from "./Loader";
+import StarRating from "./StarRating";
 
 const MovieDetails = ({ movieId, onClose }) => {
-  const [movie, setMovie] = useState(null);
+  const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const {
+    Title: title,
+    Year: year,
+    Released: released,
+    Runtime: runtime,
+    Genre: genre,
+    Director: director,
+    Plot: plot,
+    Actors: actors,
+    Poster: poster,
+    imdbRating,
+  } = movie;
 
   useEffect(() => {
     setError("");
@@ -42,13 +56,33 @@ const MovieDetails = ({ movieId, onClose }) => {
   }, [movieId]);
 
   return (
-    <div className="detail">
+    <div className="details">
       <button className="btn-back" onClick={onClose}>
         &larr;
       </button>
       {isLoading && <Loader />}
       {error && <ErrorMessage message={error} />}
-      {!isLoading && !error && movie && <p>{movie.Title}</p>}
+      {!isLoading && !error && (
+        <>
+          <header>
+            <img src={poster} alt={`Poster of ${title}`} />
+            <div className="details-overview">
+              <h2>{title}</h2>
+              <p>{`${released} * ${runtime}`}</p>
+              <p>{genre}</p>
+              <p>{`⭐️ ${imdbRating} iMDb Rating`}</p>
+            </div>
+          </header>
+          <section>
+            <div className="rating">
+              <StarRating maxRating={10} size={24} />
+            </div>
+            <p>{plot}</p>
+            <p>Starring {actors}</p>
+            <p>Directed by {director}</p>
+          </section>
+        </>
+      )}
     </div>
   );
 };

@@ -13,18 +13,6 @@ const starContainerStyle = {
   gap: "4px",
 };
 
-// use proptype to specify types of props
-// this is not used commonly in industry right now. Instead, people use TypeScript
-StarRating.propTypes = {
-  maxRating: PropType.number, //.isRequired
-  color: PropType.string,
-  size: PropType.number,
-  className: PropType.string,
-  messages: PropType.array,
-  defaultRating: PropType.number,
-  onSetRating: PropType.func,
-};
-
 const StarRating = ({
   maxRating = 5,
   color = "#fcc419",
@@ -73,6 +61,18 @@ const StarRating = ({
       </p>
     </div>
   );
+};
+
+// use proptype to specify types of props
+// this is not used commonly in industry right now. Instead, people use TypeScript
+StarRating.propTypes = {
+  maxRating: PropType.number, //.isRequired
+  color: PropType.string,
+  size: PropType.number,
+  className: PropType.string,
+  messages: PropType.array,
+  defaultRating: PropType.number,
+  onSetRating: PropType.func,
 };
 
 const Star = ({ isFull, onRate, onHoverIn, onHoverOut, size, color }) => {
