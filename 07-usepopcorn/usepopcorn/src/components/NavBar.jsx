@@ -1,5 +1,3 @@
-import SearchBar from "./SearchBar";
-
 export default function NavBar({ children }) {
   const logo = (
     <div className="logo">
@@ -11,7 +9,6 @@ export default function NavBar({ children }) {
   return (
     <nav className="nav-bar">
       {logo}
-      <SearchBar />
       {children}
     </nav>
   );

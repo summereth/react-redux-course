@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { tempMovieData, tempWatchedData } from "./data";
+// import { tempMovieData, tempWatchedData } from "./data";
 import ExpandableBox from "./components/ExpandableBox";
 import NavBar from "./components/NavBar";
+import SearchBar from "./components/SearchBar";
 import NavSearchResult from "./components/NavSearchResult";
 import SearchMovieItems from "./components/SearchMovieItems";
+import MovieDetails from "./components/MovieDetails";
 import WatchedMovieItems from "./components/WatchedMovieItems";
 import WatchedMovieSummary from "./components/WatchedMovieSummary";
 import Loader from "./components/Loader";
@@ -14,12 +16,27 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const query = "456desacf";
+  const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
+
+  function selectMovieHandler(id) {
+    setSelectedId((curr) => (curr === id ? null : id));
+  }
+
+  function closeMovieHandler() {
+    setSelectedId(null);
+  }
 
   useEffect(() => {
-    setIsLoading(true);
+    setError("");
+    if (query.length < 3) {
+      setMovies([]);
+      return;
+    }
+
     // async function must be called inside
     const fetchMovies = async () => {
+      setIsLoading(true);
       try {
         const res = await fetch(
           `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_API_KEY}&s=${query}`
@@ -34,6 +51,7 @@ export default function App() {
         if (data.Response === "False") {
           throw new Error(data.Error);
         }
+
         setMovies(data.Search);
       } catch (err) {
         setError(err.message);
@@ -41,23 +59,36 @@ export default function App() {
         setIsLoading(false);
       }
     };
+
     fetchMovies();
-  }, []);
+  }, [query]);
 
   return (
     <>
       <NavBar>
+        <SearchBar query={query} onSetQuery={setQuery} />
         <NavSearchResult resultNum={movies.length} />
       </NavBar>
       <main className="main">
         <ExpandableBox>
           {isLoading && <Loader />}
           {error && <ErrorMessage message={error} />}
-          {!isLoading && !error && <SearchMovieItems movies={movies} />}
+          {!isLoading && !error && (
+            <SearchMovieItems
+              movies={movies}
+              onSelectMovie={selectMovieHandler}
+            />
+          )}
         </ExpandableBox>
         <ExpandableBox>
-          <WatchedMovieSummary watched={watched} />
-          <WatchedMovieItems movies={watched} />
+          {selectedId ? (
+            <MovieDetails movieId={selectedId} onClose={closeMovieHandler} />
+          ) : (
+            <>
+              <WatchedMovieSummary watched={watched} />
+              <WatchedMovieItems movies={watched} />
+            </>
+          )}
         </ExpandableBox>
       </main>
     </>
