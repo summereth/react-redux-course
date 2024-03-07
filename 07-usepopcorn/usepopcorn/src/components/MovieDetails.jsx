@@ -34,6 +34,21 @@ const MovieDetails = ({ movieId, onClose, onAddWatched, ratingByUser }) => {
     onClose();
   };
 
+  // DOM manipulation
+  useEffect(() => {
+    const callback = (e) => {
+      if (e.code === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", callback);
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [onClose]);
+
+  // fetch movie detail data
   useEffect(() => {
     setError("");
 

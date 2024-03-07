@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import { tempMovieData, tempWatchedData } from "./data";
 import ExpandableBox from "./components/ExpandableBox";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
@@ -41,8 +40,10 @@ export default function App() {
     setWatched((curr) => curr.filter((movie) => movie.imdbID !== id));
   }
 
+  // fetch data based on query
   useEffect(() => {
     setError("");
+    closeMovieHandler();
     if (query.length < 3) {
       setMovies([]);
       return;
