@@ -48,12 +48,14 @@ export default function App() {
       return;
     }
 
+    const controller = new AbortController();
     // async function must be called inside
     const fetchMovies = async () => {
       setIsLoading(true);
       try {
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_API_KEY}&s=${query}`
+          `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_API_KEY}&s=${query}`,
+          { signal: controller.signal }
         );
         if (!res.ok) {
           throw new Error(
@@ -68,13 +70,16 @@ export default function App() {
 
         setMovies(data.Search);
       } catch (err) {
-        setError(err.message);
+        if (err.name !== "AbortError") {
+          setError(err.message);
+        }
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchMovies();
+    return () => controller.abort();
   }, [query]);
 
   return (

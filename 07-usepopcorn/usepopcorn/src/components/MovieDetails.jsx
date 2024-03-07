@@ -67,6 +67,16 @@ const MovieDetails = ({ movieId, onClose, onAddWatched, ratingByUser }) => {
     }
   }, [movieId]);
 
+  useEffect(() => {
+    if (title) {
+      document.title = `Movie | ${title}`;
+    }
+
+    return () => {
+      document.title = "usePopcorn";
+    };
+  }, [title]);
+
   return (
     <div className="details">
       <button className="btn-back" onClick={onClose}>
