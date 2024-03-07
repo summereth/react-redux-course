@@ -12,7 +12,9 @@ import ErrorMessage from "./components/ErrorMessage";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(() =>
+    JSON.parse(localStorage.getItem("watched"))
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
@@ -34,11 +36,29 @@ export default function App() {
           )
         : [...curr, movie]
     );
+    // /* Save to local storage in event handler */
+    // setWatched((curr) => {
+    //   const modifiedWatched = curr.find(
+    //     (element) => element.imdbID === movie.imdbID
+    //   )
+    //     ? curr.map((element) =>
+    //         element.imdbID === movie.imdbID ? movie : element
+    //       )
+    //     : [...curr, movie];
+
+    //   localStorage.setItem("watched", JSON.stringify(modifiedWatched));
+    //   return modifiedWatched;
+    // });
   }
 
   function removeWatchedHandler(id) {
     setWatched((curr) => curr.filter((movie) => movie.imdbID !== id));
   }
+
+  // update watched in localStorage
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   // fetch data based on query
   useEffect(() => {

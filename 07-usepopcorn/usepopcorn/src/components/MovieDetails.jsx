@@ -48,6 +48,16 @@ const MovieDetails = ({ movieId, onClose, onAddWatched, ratingByUser }) => {
     };
   }, [onClose]);
 
+  useEffect(() => {
+    if (title) {
+      document.title = `Movie | ${title}`;
+    }
+
+    return () => {
+      document.title = "usePopcorn";
+    };
+  }, [title]);
+
   // fetch movie detail data
   useEffect(() => {
     setError("");
@@ -81,16 +91,6 @@ const MovieDetails = ({ movieId, onClose, onAddWatched, ratingByUser }) => {
       fetchMovieById(movieId);
     }
   }, [movieId]);
-
-  useEffect(() => {
-    if (title) {
-      document.title = `Movie | ${title}`;
-    }
-
-    return () => {
-      document.title = "usePopcorn";
-    };
-  }, [title]);
 
   return (
     <div className="details">
