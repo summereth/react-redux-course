@@ -1,21 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useKey } from "../useKey";
 
 export default function SearchBar({ query, onSetQuery }) {
   const inputEl = useRef(null);
 
   // DOM manipulation: delete contents and focus on search bar
   // when "Enter" hit && search bar is not selected
-  useEffect(() => {
-    function callback(e) {
-      if (document.activeElement !== inputEl.current && e.code === "Enter") {
-        onSetQuery("");
-        inputEl.current.focus();
-      }
-    }
-    document.addEventListener("keydown", callback);
-
-    return () => document.removeEventListener("keydown", callback);
-  }, [onSetQuery]);
+  useKey("Enter", () => {
+    if (document.activeElement === inputEl.current) return;
+    onSetQuery("");
+    inputEl.current.focus();
+  });
 
   return (
     <input

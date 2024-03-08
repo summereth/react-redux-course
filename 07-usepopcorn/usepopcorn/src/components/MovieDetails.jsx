@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import ErrorMessage from "./ErrorMessage";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
+import { useKey } from "../useKey";
 
 const MovieDetails = ({ movieId, onClose, onAddWatched, ratingByUser }) => {
   const [movie, setMovie] = useState({});
@@ -35,18 +36,7 @@ const MovieDetails = ({ movieId, onClose, onAddWatched, ratingByUser }) => {
   };
 
   // DOM manipulation
-  useEffect(() => {
-    const callback = (e) => {
-      if (e.code === "Escape") {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", callback);
-    return () => {
-      document.removeEventListener("keydown", callback);
-    };
-  }, [onClose]);
+  useKey("Escape", onClose);
 
   useEffect(() => {
     if (title) {
