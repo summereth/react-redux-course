@@ -6,6 +6,7 @@ import Loader from "./components/Loader";
 import StartScreen from "./components/StartScreen";
 import Question from "./components/Question";
 import { useEffect, useReducer } from "react";
+import Progress from "./components/Progress";
 
 const initialState = {
   questions: [],
@@ -57,7 +58,7 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { status, questions, index, answer } = state;
+  const { status, questions, index, answer, points } = state;
 
   // fetch data and update state with dispatch
   useEffect(() => {
@@ -80,14 +81,26 @@ function App() {
           />
         )}
         {status === "active" && (
-          <Question
-            question={questions[index]}
-            answer={answer}
-            onAnswer={(answer) =>
-              dispatch({ type: "newAnswer", payload: answer })
-            }
-            clickNext={() => dispatch({ type: "nextQuestion" })}
-          />
+          <>
+            <Progress
+              questionNum={questions.length}
+              points={points}
+              index={index}
+              maxPossiblePoints={questions.reduce(
+                (acc, q) => acc + q.points,
+                0
+              )}
+              answer={answer}
+            />
+            <Question
+              question={questions[index]}
+              answer={answer}
+              onAnswer={(answer) =>
+                dispatch({ type: "newAnswer", payload: answer })
+              }
+              clickNext={() => dispatch({ type: "nextQuestion" })}
+            />
+          </>
         )}
       </Main>
     </div>

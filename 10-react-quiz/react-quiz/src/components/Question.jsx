@@ -1,6 +1,8 @@
 import React from "react";
 
 function Question({ question, answer, onAnswer, clickNext }) {
+  const hasAnswer = answer !== null;
+
   return (
     <div>
       <h4>{question.question}</h4>
@@ -8,23 +10,25 @@ function Question({ question, answer, onAnswer, clickNext }) {
         {question.options.map((option, i) => (
           <button
             className={`btn btn-option ${i === answer ? "answer" : ""} ${
-              answer !== null && i === question.correctOption
+              hasAnswer && i === question.correctOption
                 ? "correct"
-                : answer
+                : hasAnswer
                 ? "wrong"
                 : ""
             }`}
             key={option}
-            disabled={answer !== null}
+            disabled={hasAnswer}
             onClick={() => onAnswer(i)}
           >
             {option}
           </button>
         ))}
       </div>
-      <button className="btn btn-ui" onClick={clickNext}>
-        Next
-      </button>
+      {hasAnswer && (
+        <button className="btn btn-ui" onClick={clickNext}>
+          Next
+        </button>
+      )}
     </div>
   );
 }
