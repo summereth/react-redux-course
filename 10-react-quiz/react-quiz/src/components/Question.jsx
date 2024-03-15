@@ -1,7 +1,8 @@
 import React from "react";
 
-function Question({ question, answer, onAnswer, clickNext }) {
+function Question({ questions, index, answer, onAnswer, clickNext }) {
   const hasAnswer = answer !== null;
+  const question = questions[index];
 
   return (
     <div>
@@ -26,7 +27,7 @@ function Question({ question, answer, onAnswer, clickNext }) {
       </div>
       {hasAnswer && (
         <button className="btn btn-ui" onClick={clickNext}>
-          Next
+          {index < questions.length - 1 ? "Next" : "Submit"}
         </button>
       )}
     </div>

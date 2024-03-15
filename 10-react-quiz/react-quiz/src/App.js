@@ -7,6 +7,7 @@ import StartScreen from "./components/StartScreen";
 import Question from "./components/Question";
 import { useEffect, useReducer } from "react";
 import Progress from "./components/Progress";
+import ResultScreen from "./components/ResultScreen";
 
 const initialState = {
   questions: [],
@@ -15,6 +16,7 @@ const initialState = {
   index: 0,
   answer: null, // user's answer to current question (questions[index])
   points: 0,
+  highscore: 0,
 };
 
 function reducer(state, action) {
@@ -46,6 +48,14 @@ function reducer(state, action) {
           (action.payload === question.correctOption ? question.points : 0),
       };
     case "nextQuestion":
+      if (state.index === state.questions.length - 1) {
+        return {
+          ...state,
+          status: "finished",
+          highscore:
+            state.highscore < state.points ? state.points : state.highscore,
+        };
+      }
       return {
         ...state,
         index: state.index + 1,
@@ -58,7 +68,7 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { status, questions, index, answer, points } = state;
+  const { status, questions, index, answer, points, highscore } = state;
 
   // fetch data and update state with dispatch
   useEffect(() => {
@@ -68,6 +78,9 @@ function App() {
       .catch((err) => dispatch({ type: "dataFailed" }));
   }, []);
 
+  const questionNum = questions.length;
+  const maxPossiblePoints = questions.reduce((acc, q) => acc + q.points, 0);
+
   return (
     <div className="app">
       <Header />
@@ -76,24 +89,22 @@ function App() {
         {status === "error" && <Error />}
         {status === "ready" && (
           <StartScreen
-            questionNum={questions.length}
+            questionNum={questionNum}
             clickStart={() => dispatch({ type: "start" })}
           />
         )}
         {status === "active" && (
           <>
             <Progress
-              questionNum={questions.length}
+              questionNum={questionNum}
               points={points}
               index={index}
-              maxPossiblePoints={questions.reduce(
-                (acc, q) => acc + q.points,
-                0
-              )}
+              maxPossiblePoints={maxPossiblePoints}
               answer={answer}
             />
             <Question
-              question={questions[index]}
+              questions={questions}
+              index={index}
               answer={answer}
               onAnswer={(answer) =>
                 dispatch({ type: "newAnswer", payload: answer })
@@ -101,6 +112,13 @@ function App() {
               clickNext={() => dispatch({ type: "nextQuestion" })}
             />
           </>
+        )}
+        {status === "finished" && (
+          <ResultScreen
+            points={points}
+            maxPossiblePoints={maxPossiblePoints}
+            highscore={highscore}
+          />
         )}
       </Main>
     </div>
