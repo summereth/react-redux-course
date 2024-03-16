@@ -8,6 +8,7 @@ import Question from "./components/Question";
 import { useEffect, useReducer } from "react";
 import Progress from "./components/Progress";
 import ResultScreen from "./components/ResultScreen";
+import Footer from "./components/Footer";
 
 const initialState = {
   questions: [],
@@ -17,6 +18,7 @@ const initialState = {
   answer: null, // user's answer to current question (questions[index])
   points: 0,
   highscore: 0,
+  secondsRemaining: 450,
 };
 
 function reducer(state, action) {
@@ -61,6 +63,20 @@ function reducer(state, action) {
         index: state.index + 1,
         answer: null,
       };
+    case "restart":
+      return {
+        ...initialState,
+        status: "active",
+        highscore: state.highscore,
+        questions: state.questions,
+      };
+    case "tick":
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        // end the quiz if time out
+        status: state.secondsRemaining === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("Unknown action in reducer");
   }
@@ -68,7 +84,15 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { status, questions, index, answer, points, highscore } = state;
+  const {
+    status,
+    questions,
+    index,
+    answer,
+    points,
+    highscore,
+    secondsRemaining,
+  } = state;
 
   // fetch data and update state with dispatch
   useEffect(() => {
@@ -109,6 +133,13 @@ function App() {
               onAnswer={(answer) =>
                 dispatch({ type: "newAnswer", payload: answer })
               }
+            />
+            <Footer
+              answer={answer}
+              index={index}
+              questionNum={questionNum}
+              secondsRemaining={secondsRemaining}
+              onTick={() => dispatch({ type: "tick" })}
               clickNext={() => dispatch({ type: "nextQuestion" })}
             />
           </>
@@ -118,6 +149,7 @@ function App() {
             points={points}
             maxPossiblePoints={maxPossiblePoints}
             highscore={highscore}
+            clickRestart={() => dispatch({ type: "restart" })}
           />
         )}
       </Main>
