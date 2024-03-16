@@ -17,7 +17,7 @@ const initialState = {
   index: 0,
   answer: null, // user's answer to current question (questions[index])
   points: 0,
-  highscore: 0,
+  highscore: JSON.parse(localStorage.getItem("highscore")) || 0,
   secondsRemaining: 450,
 };
 
@@ -51,6 +51,11 @@ function reducer(state, action) {
       };
     case "nextQuestion":
       if (state.index === state.questions.length - 1) {
+        // finish the quiz
+        localStorage.setItem(
+          "highscore",
+          state.highscore < state.points ? state.points : state.highscore
+        );
         return {
           ...state,
           status: "finished",
