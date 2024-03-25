@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Homepage from "../pages/Homepage";
-import ProductPage from "../pages/ProductPage";
-import PricingPage from "../pages/PricingPage";
-import PageNotFound from "../pages/PageNotFound";
-import AppLayout from "../pages/AppLayout";
-import LoginPage from "../pages/LoginPage";
-import CityList from "../components/CityList";
-import CountryList from "../components/CountryList";
-import City from "../components/City";
-import Form from "../components/Form";
+import Homepage from "./pages/Homepage";
+import ProductPage from "./pages/ProductPage";
+import PricingPage from "./pages/PricingPage";
+import PageNotFound from "./pages/PageNotFound";
+import AppLayout from "./pages/AppLayout";
+import LoginPage from "./pages/LoginPage";
+import CityList from "./components/CityList";
+import CountryList from "./components/CountryList";
+import City from "./components/City";
+import Form from "./components/Form";
 
 function App() {
   const [cities, setCities] = useState([]);
