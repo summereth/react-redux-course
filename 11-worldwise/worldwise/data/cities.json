@@ -35,6 +35,18 @@
         "lat": "37.75768707689704",
         "lng": "-122.26547241210939"
       }
+    },
+    {
+      "id": "3d24",
+      "cityName": "Carmel Valley Village",
+      "country": "United States of America (the)",
+      "emoji": "🇺🇸",
+      "date": "2024-04-02T05:46:09.633Z",
+      "notes": "123",
+      "position": {
+        "lat": "36.500805317604815",
+        "lng": "-121.79443359375001"
+      }
     }
   ]
 }
