@@ -9,21 +9,21 @@ function CitiesProvider({ children }) {
   const [currentCity, setCurrentCity] = useState({});
 
   useEffect(() => {
-    async function fetchCities() {
-      try {
-        setIsLoading(true);
-        const res = await fetch("http://localhost:8000/cities");
-        const data = await res.json();
-        setCities(data);
-      } catch {
-        alert("Error loading data...");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
     fetchCities();
   }, []);
+
+  async function fetchCities() {
+    try {
+      setIsLoading(true);
+      const res = await fetch("http://localhost:8000/cities");
+      const data = await res.json();
+      setCities(data);
+    } catch {
+      alert("Error loading data...");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   async function getCity(id) {
     try {
@@ -38,6 +38,24 @@ function CitiesProvider({ children }) {
     }
   }
 
+  async function createCity(newCity) {
+    try {
+      setIsLoading(true);
+      await fetch(`http://localhost:8000/cities`, {
+        method: "POST",
+        body: JSON.stringify(newCity),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      fetchCities();
+    } catch {
+      alert("Error updating data...");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <CitiesContext.Provider
       value={{
@@ -45,6 +63,7 @@ function CitiesProvider({ children }) {
         isLoading,
         currentCity,
         getCity,
+        createCity,
       }}
     >
       {children}
