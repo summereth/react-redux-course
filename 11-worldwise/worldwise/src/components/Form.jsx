@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useUrlPosition } from "../../hooks/useUrlPosition";
+import { useUrlPosition } from "../hooks/useUrlPosition";
 import styles from "./Form.module.css";
 import Button from "./Button";
 import BackButton from "./BackButton";
