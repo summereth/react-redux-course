@@ -1,24 +1,19 @@
 import React from "react";
 import { useEffect } from "react";
+import { useQuiz } from "../contexts/QuizContext";
 
-function Footer({
-  answer,
-  index,
-  questionNum,
-  clickNext,
-  secondsRemaining,
-  onTick,
-}) {
+function Footer() {
+  const { answer, index, questionNum, secondsRemaining, dispatch } = useQuiz();
   const mins = Math.floor(secondsRemaining / 60);
   const seconds = secondsRemaining - mins * 60;
 
   useEffect(() => {
     const id = setInterval(() => {
-      onTick();
+      dispatch({ type: "tick" });
     }, 1000);
 
     return () => clearInterval(id);
-  }, [onTick]);
+  }, [dispatch]);
 
   return (
     <footer>
@@ -26,7 +21,10 @@ function Footer({
         {mins < 10 ? `0${mins}` : mins}:{seconds < 10 ? `0${seconds}` : seconds}
       </div>
       {answer !== null && (
-        <button className="btn btn-ui" onClick={clickNext}>
+        <button
+          className="btn btn-ui"
+          onClick={() => dispatch({ type: "nextQuestion" })}
+        >
           {index < questionNum - 1 ? "Next" : "Submit"}
         </button>
       )}

@@ -1,6 +1,8 @@
 import React from "react";
+import { useQuiz } from "../contexts/QuizContext";
 
-function Question({ questions, index, answer, onAnswer }) {
+function Question() {
+  const { questions, index, answer, dispatch } = useQuiz();
   const hasAnswer = answer !== null;
   const question = questions[index];
 
@@ -19,7 +21,7 @@ function Question({ questions, index, answer, onAnswer }) {
             }`}
             key={option}
             disabled={hasAnswer}
-            onClick={() => onAnswer(i)}
+            onClick={() => dispatch({ type: "newAnswer", payload: i })}
           >
             {option}
           </button>
