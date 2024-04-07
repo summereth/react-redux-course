@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import { useContext, createContext, useEffect, useState } from "react";
+import { useContext, createContext, useEffect, useCallback } from "react";
 
 const CitiesContext = createContext();
 const initialState = {
@@ -61,21 +61,26 @@ function CitiesProvider({ children }) {
   }
 
   /**
-   * Set currentCity with given cityId, which can be retrieved from url params
+   * Set currentCity with given cityId, which can be retrieved from url params.
+   * This function updates the context's state, which leads to a re-render and the function will be re-created again.
+   * Thus, we memoize the function here, to avoid inifite loop (e.g. in useEffect) when using this function in other hooks
    * @param {*} id cityId retrieved from url
    * @returns
    */
-  async function getCity(id) {
-    if (id === currentCity.id) return;
-    try {
-      dispatch({ type: "loading" });
-      const res = await fetch(`http://localhost:8000/cities/${id}`);
-      const data = await res.json();
-      dispatch({ type: "city/loaded", payload: data });
-    } catch {
-      dispatch({ type: "rejected", payload: "Error fetching data" });
-    }
-  }
+  const getCity = useCallback(
+    async function getCity(id) {
+      if (id === currentCity.id) return;
+      try {
+        dispatch({ type: "loading" });
+        const res = await fetch(`http://localhost:8000/cities/${id}`);
+        const data = await res.json();
+        dispatch({ type: "city/loaded", payload: data });
+      } catch {
+        dispatch({ type: "rejected", payload: "Error fetching data" });
+      }
+    },
+    [currentCity.id]
+  );
 
   async function createCity(newCity) {
     try {
